@@ -25,6 +25,13 @@ public:
 		}
 	}
 
+	CustomSharedPointer(size_t size)
+	{
+		heap_ptr_ = new T[size];
+		nbr_owners_ = new int[1];
+		*nbr_owners_ = 1;
+	}
+
     T* get()
     {
         return heap_ptr_;

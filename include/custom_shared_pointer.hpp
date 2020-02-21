@@ -83,6 +83,37 @@ public:
 		return *this;
 	}
 
+	CustomSharedPointer(CustomSharedPointer<T> &&sp)
+	{
+		heap_ptr_ = sp.heap_ptr_;
+		nbr_owners_ = sp.nbr_owners_;
+
+		sp.heap_ptr_ = nullptr;
+		sp.nbr_owners_ = nullptr;
+	}
+
+	CustomSharedPointer& operator=(CustomSharedPointer&& sp)
+	{
+		// Self-assignment detection
+		if (&sp == this)
+			return *this;
+
+		--(*nbr_owners_);
+		if (*nbr_owners_ == 0)
+		{
+			delete[] heap_ptr_;
+			delete[] nbr_owners_;
+		}
+
+		heap_ptr_ = sp.heap_ptr_;
+		nbr_owners_ = sp.nbr_owners_;
+
+		sp.heap_ptr_ = nullptr;
+		sp.nbr_owners_ = nullptr;
+
+		return *this;
+	}
+
     T* get()
     {
         return heap_ptr_;

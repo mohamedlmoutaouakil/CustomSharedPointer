@@ -70,3 +70,21 @@ TEST(TestCustomSharedPointer, CopyAssignmentTest) {
 	ASSERT_EQ(shared_ptr2.get_nbr_owners(), 2);
 	ASSERT_EQ(shared_ptr1.get(), shared_ptr2.get());
 }
+
+TEST(TestCustomSharedPointer, MoveConstructorTest) {
+	auto shared_ptr1 = CustomSharedPointer<int>(3);
+	auto shared_ptr2 = CustomSharedPointer<int>(std::move(shared_ptr1));
+
+	ASSERT_EQ(shared_ptr1.get(), nullptr);
+	ASSERT_EQ(shared_ptr2.get_nbr_owners(), 1);
+}
+
+TEST(TestCustomSharedPointer, MoveAssignmentTest) {
+	auto shared_ptr1 = CustomSharedPointer<int>(3);
+	auto shared_ptr2 = CustomSharedPointer<int>(6);
+
+	shared_ptr2 = std::move(shared_ptr1);
+
+	ASSERT_EQ(shared_ptr1.get(), nullptr);
+	ASSERT_EQ(shared_ptr2.get_nbr_owners(), 1);
+}

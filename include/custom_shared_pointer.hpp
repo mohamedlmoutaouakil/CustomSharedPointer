@@ -27,9 +27,33 @@ public:
 
 	CustomSharedPointer(size_t size)
 	{
-		heap_ptr_ = new T[size];
-		nbr_owners_ = new int[1];
-		*nbr_owners_ = 1;
+		try                               // Add a try block
+		{
+			heap_ptr_ = new T[size];
+			nbr_owners_ = new int[1];
+			*nbr_owners_ = 1;
+		}
+		catch (...)
+		{
+			delete[] nbr_owners_;    // If there is an exception make sure the object is deleted.
+			delete[] heap_ptr_;
+			throw;             // Then re-throw the exception.
+		}
+	}
+
+	CustomSharedPointer(T* ptr)
+	{
+		heap_ptr_ = ptr;
+		try                               // Add a try block
+		{
+			nbr_owners_ = new int[1];
+			*nbr_owners_ = 1;
+		}
+		catch (...)
+		{
+			delete[] nbr_owners_;    // If there is an exception make sure the object is deleted.
+			throw;             // Then re-throw the exception.
+		}
 	}
 
     T* get()
